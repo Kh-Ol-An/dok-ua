@@ -1,33 +1,33 @@
 import React from "react";
 
-import Marka from "../Marka/Marka";
-import ModelAudi from "../Models/Audi/Audi";
-import ModelBmw from "../Models/Bmw/Bmw";
-import AudiA4 from "../Modifications/AudiA4/AudiA4";
-import AudiA6 from "../Modifications/AudiA6/AudiA6";
-import BmwX5 from "../Modifications/BmwX5/BmwX5";
+import ItemAuto from "../ItemAuto/ItemAuto";
+import marka from "../../data/marka.json";
+import modelAudi from "../../data/model-audi.json";
+import modelBmw from "../../data/model-bmw.json";
+import modificationAudiA4 from "../../data/modification-audi-a4.json";
+import modificationAudiA6 from "../../data/modification-audi-a6.json";
+import modificationBmwX5 from "../../data/modification-bmw-x5.json";
+import s from "./Form.module.css";
 
 const Form = () => {
   return (
-    <form>
-      <label>
-        <input type="radio" />
-        Выберите марку
-      </label>
-      <label>
-        <input type="radio" />
-        Выберите модель
-      </label>
-      <label>
-        <input type="radio" />
-        Выберите двигатель
-      </label>
-      <Marka />
-      <ModelAudi />
-      <ModelBmw />
-      <AudiA4 />
-      <AudiA6 />
-      <BmwX5 />
+    <form className={s.form}>
+      <div className={s.header}>
+        <label className={s.label}>
+          <input className={s.input} type="radio" />
+          Выберите марку <span className={s.span} />
+        </label>
+        <label className={s.label}>
+          <input className={s.input} type="radio" />
+          Выберите модель <span className={s.span} />
+        </label>
+        <label className={s.label}>
+          <input className={s.input} type="radio" />
+          Выберите двигатель <span className={s.span} />
+        </label>
+      </div>
+
+      <ItemAuto dataItemAuto={modificationBmwX5} />
     </form>
   );
 };
