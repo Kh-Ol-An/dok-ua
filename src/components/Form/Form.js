@@ -1,33 +1,184 @@
-import React from "react";
+import React, { useState } from "react";
 
 import ItemAuto from "../ItemAuto/ItemAuto";
 import marka from "../../data/marka.json";
-import modelAudi from "../../data/model-audi.json";
-import modelBmw from "../../data/model-bmw.json";
-import modificationAudiA4 from "../../data/modification-audi-a4.json";
-import modificationAudiA6 from "../../data/modification-audi-a6.json";
-import modificationBmwX5 from "../../data/modification-bmw-x5.json";
+import Audi from "../../data/model-audi.json";
+import BMW from "../../data/model-bmw.json";
+import A4 from "../../data/modification-audi-a4.json";
+import A6 from "../../data/modification-audi-a6.json";
+import X5 from "../../data/modification-bmw-x5.json";
 import s from "./Form.module.css";
 
+let infoAuto = "";
+let prevDataItemAuto = null;
+let nowDataItemAuto = null;
+
 const Form = () => {
+  const [dataItemAuto, setDataItemAuto] = useState(marka);
+  const [name, setName] = useState("");
+  const [formClasses, setFormClasses] = useState([s.form]);
+  const [itemAutoClasses, setItemAutoClasses] = useState([s.itemAuto]);
+
+  const [checkedMarka, setCheckedMarka] = useState(true);
+  const [checkedModel, setCheckedModel] = useState(false);
+  const [checkedModification, setCheckedModification] = useState(false);
+
+  const allDataItemAuto = { Audi, BMW, A4, A6, X5 };
+  const notFound = [
+    {
+      marka_name: "Для данного выбора отсутствуют данные",
+      marka_id: "1"
+    }
+  ];
+
+  function addStyles(height, scale) {
+    const arrFormClasses = formClasses;
+    const arrItemAutoClasses = itemAutoClasses;
+    arrFormClasses.push(height);
+    arrItemAutoClasses.push(scale);
+    const strFormClasses = arrFormClasses.join(" ");
+    const strItemAutoClasses = arrItemAutoClasses.join(" ");
+    setFormClasses(strFormClasses);
+    setItemAutoClasses(strItemAutoClasses);
+  }
+
+  function deleteStyles() {
+    const arrFormClasses = formClasses.split(" ");
+    const arrItemAutoClasses = itemAutoClasses.split(" ");
+    arrFormClasses.pop();
+    arrItemAutoClasses.pop();
+    setFormClasses(arrFormClasses);
+    setItemAutoClasses(arrItemAutoClasses);
+  }
+
+  function handleChangeMarka() {
+    if (checkedMarka) {
+      typeof formClasses !== "string" && addStyles(s.height, s.scale);
+      typeof formClasses === "string" && deleteStyles();
+    }
+    setDataItemAuto(marka);
+    if (name === "marka") {
+      setCheckedMarka(true);
+      setCheckedModel(true);
+      setCheckedModification(false);
+    } else if (name === "model") {
+      setCheckedMarka(true);
+      setCheckedModel(false);
+      setCheckedModification(true);
+    }
+  }
+
+  function handleChangeModel() {
+    if (checkedModel) {
+      typeof formClasses !== "string" && addStyles(s.height, s.scale);
+      typeof formClasses === "string" && deleteStyles();
+    }
+    if (name === "marka" || name === "model") {
+      if (name === "marka") {
+        setDataItemAuto(nowDataItemAuto);
+        setCheckedMarka(false);
+        setCheckedModel(true);
+        setCheckedModification(false);
+      } else if (name === "model") {
+        setDataItemAuto(prevDataItemAuto);
+        setCheckedMarka(false);
+        setCheckedModel(true);
+        setCheckedModification(true);
+      }
+    }
+  }
+
+  function handleChangeModification() {
+    if (checkedModification) {
+      typeof formClasses !== "string" && addStyles(s.height, s.scale);
+      typeof formClasses === "string" && deleteStyles();
+    }
+    if (name === "model") {
+      setDataItemAuto(nowDataItemAuto);
+      setCheckedMarka(false);
+      setCheckedModel(false);
+      setCheckedModification(true);
+    }
+  }
+
+  function onPropsUp(name, value) {
+    if (name === "marka") {
+      setName(name);
+      if (allDataItemAuto[value]) {
+        prevDataItemAuto = dataItemAuto;
+        setDataItemAuto(allDataItemAuto[value]);
+        nowDataItemAuto = allDataItemAuto[value];
+        setCheckedMarka(false);
+        setCheckedModel(true);
+        setCheckedModification(false);
+        infoAuto = infoAuto + value + "; ";
+      } else {
+        setDataItemAuto(notFound);
+      }
+    } else if (name === "model") {
+      setName(name);
+      if (allDataItemAuto[value]) {
+        prevDataItemAuto = dataItemAuto;
+        setDataItemAuto(allDataItemAuto[value]);
+        nowDataItemAuto = allDataItemAuto[value];
+        setCheckedModel(false);
+        setCheckedModification(true);
+        infoAuto = infoAuto + value + "; ";
+      } else {
+        setDataItemAuto(notFound);
+      }
+    } else if (name === "modification") {
+      setName(name);
+      setCheckedModel(false);
+      setCheckedModification(true);
+      alert(infoAuto + value);
+    }
+  }
+
   return (
-    <form className={s.form}>
+    <form className={formClasses}>
       <div className={s.header}>
-        <label className={s.label}>
-          <input className={s.input} type="radio" />
+        <input
+          id="marka"
+          className={s.input}
+          type="checkbox"
+          name="point"
+          value="marka"
+          checked={checkedMarka}
+          onChange={handleChangeMarka}
+        />
+        <label className={s.label} htmlFor="marka">
           Выберите марку <span className={s.span} />
         </label>
-        <label className={s.label}>
-          <input className={s.input} type="radio" />
+        <input
+          id="model"
+          className={s.input}
+          type="checkbox"
+          name="point"
+          value="model"
+          checked={checkedModel}
+          onChange={handleChangeModel}
+        />
+        <label className={s.label} htmlFor="model">
           Выберите модель <span className={s.span} />
         </label>
-        <label className={s.label}>
-          <input className={s.input} type="radio" />
+        <input
+          id="modification"
+          className={s.input}
+          type="checkbox"
+          name="point"
+          value="modification"
+          checked={checkedModification}
+          onChange={handleChangeModification}
+        />
+        <label className={s.label} htmlFor="modification">
           Выберите двигатель <span className={s.span} />
         </label>
       </div>
 
-      <ItemAuto dataItemAuto={modificationBmwX5} />
+      <div className={itemAutoClasses}>
+        <ItemAuto dataItemAuto={dataItemAuto} onPropsUp={onPropsUp} />
+      </div>
     </form>
   );
 };

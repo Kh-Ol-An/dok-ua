@@ -1,13 +1,20 @@
 .form {
-  min-height: 7.2em;
-  /* display: flex;
-  flex-flow: wrap; */
+  max-height: 500px;
   margin: 2em;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.11);
+  transition: all 300ms ease-in;
+}
+
+.height {
+  max-height: 72px;
 }
 
 .header {
   display: flex;
+}
+
+.input {
+  display: none;
 }
 
 .label {
@@ -19,22 +26,23 @@
   padding: 0 3.0625em 0 2.876em;
   font-family: "Roboto";
   color: #989898;
+  cursor: pointer;
 }
 
-.label:first-child {
+.input:checked + .label {
   color: #fff;
   background: #1a77d2;
 }
 
-.label:first-child .span {
+.input:checked + .label > .span {
   background: #2a81d5;
 }
 
-.label:first-child .span:after {
+.input:checked + .label > .span:after {
   border-top: 0.375em solid #fff;
 }
 
-.label:not(:first-child):before {
+.label:before {
   content: "";
   width: 0.0625em;
   position: absolute;
@@ -44,8 +52,8 @@
   background: #ececec;
 }
 
-.input {
-  display: none;
+.input:checked + .label:before {
+  background: #2a81d5;
 }
 
 .span {
@@ -69,4 +77,12 @@
   border-top: 0.375em solid #929292;
 }
 
-/* .body */
+.itemAuto {
+  transform-origin: top;
+  transform: scaleY(1);
+  transition: all 300ms ease-in;
+}
+
+.scale {
+  transform: scaleY(0);
+}

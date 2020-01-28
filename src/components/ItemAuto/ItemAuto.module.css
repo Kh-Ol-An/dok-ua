@@ -1,7 +1,6 @@
 .main {
   display: grid;
-  grid-template-rows: repeat(auto-fit, 60px);
-  border-top: 3px solid #1a77d2;
+  border-top: 0.3em solid #1a77d2;
 }
 
 .label {
