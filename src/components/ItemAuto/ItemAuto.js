@@ -21,14 +21,18 @@ const ItemAuto = ({ dataItemAuto, onPropsUp }) => {
     const widthMain = main.current ? main.current.offsetWidth : 0;
     const maxWidthLabel = maxWidthSpan + 40;
     const maxColumns = Math.floor(widthMain / maxWidthLabel);
-    maxColumns > dataItemAuto.length
-      ? setColumns(dataItemAuto.length)
-      : setColumns(maxColumns);
+    if (maxColumns > dataItemAuto.length) {
+      setColumns(dataItemAuto.length);
+    } else if (maxColumns < 3) {
+      setColumns(1);
+    } else {
+      setColumns(maxColumns);
+    }
   }, [maxWidthSpan, dataItemAuto.length]);
 
   function handleChange({ target }) {
-    const { name, value } = target;
-    onPropsUp(name, value);
+    const { id, name, value } = target;
+    onPropsUp(id, name, value);
   }
 
   return (
@@ -50,6 +54,7 @@ const ItemAuto = ({ dataItemAuto, onPropsUp }) => {
         return (
           <label className={s.label} key={id}>
             <input
+              id={id}
               className={s.input}
               type="radio"
               name={name}

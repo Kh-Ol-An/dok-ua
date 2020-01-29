@@ -1,12 +1,12 @@
 .form {
-  max-height: 500px;
+  max-height: 340em;
   margin: 2em;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.11);
   transition: all 300ms ease-in;
 }
 
 .height {
-  max-height: 72px;
+  max-height: 7.2em;
 }
 
 .header {
@@ -85,4 +85,22 @@
 
 .scale {
   transform: scaleY(0);
+}
+
+@media (max-width: 1279px) {
+  .height {
+    max-height: 21.6em;
+  }
+
+  .header {
+    flex-flow: column;
+  }
+
+  .label {
+    justify-content: center;
+  }
+
+  .label:before {
+    display: none;
+  }
 }

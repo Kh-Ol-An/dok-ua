@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga";
 
+// import { fetchInDocUa } from "../../services/api";
 import ItemAuto from "../ItemAuto/ItemAuto";
 import marka from "../../data/marka.json";
 import Audi from "../../data/model-audi.json";
@@ -9,13 +11,18 @@ import A6 from "../../data/modification-audi-a6.json";
 import X5 from "../../data/modification-bmw-x5.json";
 import s from "./Form.module.css";
 
+const trackingId = "UA-157277826-1";
+ReactGA.initialize(trackingId);
+
 let infoAuto = "";
 let prevDataItemAuto = null;
 let nowDataItemAuto = null;
 
 const Form = () => {
   const [dataItemAuto, setDataItemAuto] = useState(marka);
+  const [id, setID] = useState("");
   const [name, setName] = useState("");
+
   const [formClasses, setFormClasses] = useState([s.form]);
   const [itemAutoClasses, setItemAutoClasses] = useState([s.itemAuto]);
 
@@ -33,21 +40,23 @@ const Form = () => {
 
   function addStyles(height, scale) {
     const arrFormClasses = formClasses;
-    const arrItemAutoClasses = itemAutoClasses;
     arrFormClasses.push(height);
-    arrItemAutoClasses.push(scale);
     const strFormClasses = arrFormClasses.join(" ");
-    const strItemAutoClasses = arrItemAutoClasses.join(" ");
     setFormClasses(strFormClasses);
+
+    const arrItemAutoClasses = itemAutoClasses;
+    arrItemAutoClasses.push(scale);
+    const strItemAutoClasses = arrItemAutoClasses.join(" ");
     setItemAutoClasses(strItemAutoClasses);
   }
 
   function deleteStyles() {
     const arrFormClasses = formClasses.split(" ");
-    const arrItemAutoClasses = itemAutoClasses.split(" ");
     arrFormClasses.pop();
-    arrItemAutoClasses.pop();
     setFormClasses(arrFormClasses);
+
+    const arrItemAutoClasses = itemAutoClasses.split(" ");
+    arrItemAutoClasses.pop();
     setItemAutoClasses(arrItemAutoClasses);
   }
 
@@ -56,7 +65,9 @@ const Form = () => {
       typeof formClasses !== "string" && addStyles(s.height, s.scale);
       typeof formClasses === "string" && deleteStyles();
     }
+
     setDataItemAuto(marka);
+
     if (name === "marka") {
       setCheckedMarka(true);
       setCheckedModel(true);
@@ -73,6 +84,7 @@ const Form = () => {
       typeof formClasses !== "string" && addStyles(s.height, s.scale);
       typeof formClasses === "string" && deleteStyles();
     }
+
     if (name === "marka" || name === "model") {
       if (name === "marka") {
         setDataItemAuto(nowDataItemAuto);
@@ -93,6 +105,7 @@ const Form = () => {
       typeof formClasses !== "string" && addStyles(s.height, s.scale);
       typeof formClasses === "string" && deleteStyles();
     }
+
     if (name === "model") {
       setDataItemAuto(nowDataItemAuto);
       setCheckedMarka(false);
@@ -101,39 +114,63 @@ const Form = () => {
     }
   }
 
-  function onPropsUp(name, value) {
+  function onPropsUp(id, name, value) {
     if (name === "marka") {
+      setID(id);
       setName(name);
+
       if (allDataItemAuto[value]) {
-        prevDataItemAuto = dataItemAuto;
+        prevDataItemAuto = dataItemAuto; // чтобы можно было гулять между выбором марки, модели и двигателя
         setDataItemAuto(allDataItemAuto[value]);
-        nowDataItemAuto = allDataItemAuto[value];
+        //  AXIOS ЗАПРОС
+        // fetchInDocUa(value)
+        //   .then(({ data }) => setDataItemAuto(data))
+        //   .catch(err => console.log(err));
+        nowDataItemAuto = allDataItemAuto[value]; // чтобы можно было гулять между выбором марки, модели и двигателя
+
         setCheckedMarka(false);
         setCheckedModel(true);
         setCheckedModification(false);
+
         infoAuto = infoAuto + value + "; ";
       } else {
         setDataItemAuto(notFound);
       }
     } else if (name === "model") {
+      setID(id);
       setName(name);
+
       if (allDataItemAuto[value]) {
-        prevDataItemAuto = dataItemAuto;
+        prevDataItemAuto = dataItemAuto; // чтобы можно было гулять между выбором марки, модели и двигателя
         setDataItemAuto(allDataItemAuto[value]);
-        nowDataItemAuto = allDataItemAuto[value];
+        //  AXIOS ЗАПРОС
+        // fetchInDocUa(value)
+        //   .then(({ data }) => setDataItemAuto(data))
+        //   .catch(err => console.log(err));
+        nowDataItemAuto = allDataItemAuto[value]; // чтобы можно было гулять между выбором марки, модели и двигателя
+
         setCheckedModel(false);
         setCheckedModification(true);
+
         infoAuto = infoAuto + value + "; ";
       } else {
         setDataItemAuto(notFound);
       }
     } else if (name === "modification") {
+      setID(id);
       setName(name);
       setCheckedModel(false);
       setCheckedModification(true);
+
       alert(infoAuto + value);
     }
   }
+
+  ReactGA.event({
+    category: "FVA",
+    action: name,
+    label: id
+  });
 
   return (
     <form className={formClasses}>
